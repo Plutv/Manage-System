@@ -3,11 +3,14 @@ import type { ColumnsType } from "antd/es/table";
 import "./index.css";
 import Action from ".././Action";
 import axios from "axios";
-import { useState } from "react";
+// import { useState } from "react";
 import DataType from "../../../types";
 import { useNavigate } from "react-router-dom";
+import useAppDispatch from "../../store/useAppDispatch";
+import { fetchList, selectList, updateItem } from "../../store/list";
+import useAppSelector from "../../store/useAppSelector";
 
-let newData: [] = [];
+// let newData: [] = [];
 let lastname = "";
 const initList = async () => {
   const res = await axios.get("/api/stu/list");
@@ -15,40 +18,47 @@ const initList = async () => {
 };
 
 const App = (props: { name: string }) => {
+  const data = useAppSelector(selectList);
+  const dispatch = useAppDispatch();
   const nav = useNavigate();
   const { name } = props;
-  const [data, setData] = useState([]);
-  if (name === "") {
+  console.log("name: ", name, name==="")
+  //const [data, setData] = useState([]);
+  if (name !== "") {
+    console.log(333333)
     initList().then((res) => {
       if(res.data.code === -2){
         nav("../");
       }
       else {
         if (data === undefined || res.data.list.length !== data.length) {
-          setData(res.data.list);        
+          //dispatch(updateItem());
         }
         lastname = "";
       }
     });
   } else {
-    initList().then((res) => {
-      const tmp:[] = res.data.list;
-      if (name !== lastname) {
-        newData = []
-        for (let i in tmp) {
-          const item:DataType = tmp[i];
-          if(item.name === name){
-            newData.push(tmp[i]);
-          }
-        }
-        setData(newData);
-        lastname = name;
-      }
-    });
+    console.log(111111,222)
+    dispatch(fetchList());
+    console.log("data",data)
+    // initList().then((res) => {
+    //   const tmp:[] = res.data.list;
+    //   if (name !== lastname) {
+    //     newData = []
+    //     for (let i in tmp) {
+    //       const item:DataType = tmp[i];
+    //       if(item.name === name){
+    //         newData.push(tmp[i]);
+    //       }
+    //     }
+    //     setData(newData);
+    //     lastname = name;
+    //   }
+    // });
   }
   const change = () => {
     initList().then((res) => {
-      setData(res.data.list);
+      //setData(res.data.list);
     });
   };
   const columns: ColumnsType<DataType> = [
