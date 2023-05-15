@@ -1,29 +1,32 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { RootState } from "./index";
 
 import DataType from '../../types'
 
-let initialState: DataType[] = [];
+const initialList: DataType[] = [];
 
-axios.get("/api/stu/list", {
-        params: {
-          pageindex: 1,
-          pagesize: 20,
-        },
-      }).then(res => initialState = res.data.list)
+export const fetchList = createAsyncThunk(
+  'list/initList',
+  async () => {
+    const res = await initList();
+    return res.data.list;
+  }
+)
+
+// A mock function to mimic making an async request for data
+const initList = () => axios.get("/api/stu/list", {
+    params: {
+      pageindex: 1,
+      pagesize: 20,
+    },
+  });
+
 
 export const listSlice = createSlice({
   name: "list",
-  initialState,
+  initialState: initialList,
   reducers: {
-    setList: (state) => {
-      axios.get("/api/stu/list", {
-        params: {
-          pageindex: 1,
-          pagesize: 20,
-        },
-      }).then(res=> state = res.data.list)
-    },
     createItem: (state, action: PayloadAction<DataType>) => {
       const item: DataType = action.payload;
       state.unshift(item);
@@ -37,6 +40,13 @@ export const listSlice = createSlice({
       state.splice(index, 1);
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(fetchList.fulfilled, (state, action) => {
+      return action.payload;
+    });
+  },
 });
 
-export const { setList, createItem, updateItem, deleteItem } = listSlice.actions;
+export const { createItem, updateItem, deleteItem } = listSlice.actions;
+
+export const selectList = (state: RootState) => state.list;
