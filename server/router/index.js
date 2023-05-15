@@ -16,6 +16,11 @@ if(userinfo != ""){
 const router = new Router();
 
 async function checkUser(ctx, next) {
+  if(ctx.session.user) {
+    ctx.body = { code: 0, message: "登录成功" };
+    console.log(ctx.session.user);
+    return;
+  }
   const { username, password } = ctx.request.body;
   let isCorrect = false;
   for (let i in account) {
