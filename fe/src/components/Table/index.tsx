@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import useAppDispatch from "../../store/useAppDispatch";
 import { fetchList, selectList, updateItem } from "../../store/list";
 import useAppSelector from "../../store/useAppSelector";
+import { useEffect } from "react";
 
 // let newData: [] = [];
 let lastname = "";
@@ -18,12 +19,17 @@ const initList = async () => {
 };
 
 const App = (props: { name: string }) => {
+  console.log('update Table')
   const data = useAppSelector(selectList);
   const dispatch = useAppDispatch();
   const nav = useNavigate();
   const { name } = props;
   console.log("name: ", name, name==="")
   //const [data, setData] = useState([]);
+
+  useEffect(() => {
+    dispatch(fetchList())
+  }, [])
   if (name !== "") {
     console.log(333333)
     initList().then((res) => {
@@ -38,9 +44,9 @@ const App = (props: { name: string }) => {
       }
     });
   } else {
-    console.log(111111,222)
-    dispatch(fetchList());
-    console.log("data",data)
+    // console.log(111111,222)
+    // dispatch(fetchList());
+    // console.log("data",data)
     // initList().then((res) => {
     //   const tmp:[] = res.data.list;
     //   if (name !== lastname) {
@@ -118,7 +124,7 @@ const App = (props: { name: string }) => {
       key: "action",
       render: (_, record) => (
         <Tag id="setting">
-          <Action id={record.id} change={change} list={data} />
+          <Action id={record.id} />
         </Tag>
       ),
     },

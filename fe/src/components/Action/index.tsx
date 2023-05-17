@@ -1,18 +1,22 @@
 import { SettingOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { Input, MenuProps, Modal, Space, Select, Form, message } from "antd";
 import { Dropdown } from "antd";
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import DataType from "../../../types";
+import useAppDispatch from "../../store/useAppDispatch";
+import { deleteItem, selectList, updateItem } from "../../store/list";
+import useAppSelector from "../../store/useAppSelector";
 import "./index.css";
 
 const { Option } = Select;
 
-const App = (props: { id: string; change: () => void; list: DataType[] }) => {
+const App = (props: { id: string }) => {
+  console.log("updata Action")
+  const list = useAppSelector(selectList);
+  const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const nav = useNavigate();
-  const { id, change, list } = props;
+  const { id } = props;
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -72,17 +76,17 @@ const App = (props: { id: string; change: () => void; list: DataType[] }) => {
       return;
     }
 
-    axios.post("/api/stu/update", data).then((res) => {
-      if(res.data.code === -2){
-        nav("../");
-      }
-    });
+    // axios.post("/api/stu/update", data).then((res) => {
+    //   if(res.data.code === -2){
+    //     nav("../");
+    //   }
+    // });
     
     setConfirmLoading(true);
     setTimeout(() => {
       setOpen(false);
       setConfirmLoading(false);
-      change();
+      dispatch(updateItem(data));
     }, 1000);
   };
 
@@ -111,13 +115,7 @@ const App = (props: { id: string; change: () => void; list: DataType[] }) => {
   };
 
   const determine = () => {
-    setIsModalOpen(false);
-    axios.post("/api/stu/delete", { id }).then((res) => {
-      if(res.data.code === -2){
-        nav("../");
-      }
-    });
-    change();
+    dispatch(deleteItem(id))
   };
 
   const cancel = () => {

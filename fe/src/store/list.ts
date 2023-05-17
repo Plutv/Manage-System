@@ -35,10 +35,10 @@ export const listSlice = createSlice({
       const index = state.findIndex((item) => item.id === action.payload.id);
       state[index] = action.payload;
     },
-    deleteItem: (state, action: PayloadAction<DataType>) => {
-      const index = state.findIndex((item) => item.id === action.payload.id);
+    deleteItem: (state, action: PayloadAction<String>) => {
+      const index = state.findIndex((item) => item.id === action.payload);
       state.splice(index, 1);
-    },
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(fetchList.fulfilled, (state, action) => {
