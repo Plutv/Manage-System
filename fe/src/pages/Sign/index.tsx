@@ -20,7 +20,14 @@ const App: React.FC = () => {
         }
     })
   };
-
+  axios.post('/api/user/login').then((res) => {
+        if(res.data.code === 0){
+          nav("/main");
+        }
+        else{
+          message.info("登录失败，用户名或密码错误")
+        }
+    })
   return (
     <div className="sign-in">
       <div className="sign-in-title">
