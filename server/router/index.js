@@ -73,7 +73,10 @@ async function createUser(ctx, next) {
     "./public/userinfo.json",
     JSON.stringify(infolist)
   );
-  ctx.body = { code: 0, message: "创建用户成功" };
+  ctx.body = { 
+    code: 0,
+    item: newUser, 
+    message: "创建用户成功" };
 }
  
 async function updateUser(ctx, next) {

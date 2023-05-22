@@ -1,11 +1,13 @@
 import { Button, Modal, Input, Form, Select, message } from "antd";
-import axios from "axios";
 import { useState } from "react";
 import "./index.css";
+import useAppDispatch from "../../store/useAppDispatch";
+import { addItem } from "../../store/list";
 
 const { Option } = Select;
 
 const App = (props: { onchange: () => void }) => {
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
@@ -69,11 +71,12 @@ const App = (props: { onchange: () => void }) => {
       return;
     }
     
-    axios.post("/api/stu/create", data).then((res) => {
-      if(res.data.code === 1){
-        return;
-      }
-    });
+    dispatch(addItem(data))
+    // axios.post("/api/stu/create", data).then((res) => {
+    //   if(res.data.code === 1){
+    //     return;
+    //   }
+    // });
     setConfirmLoading(true);
     setTimeout(() => {
       setOpen(false);
