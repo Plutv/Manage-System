@@ -4,6 +4,8 @@ import "./index.css";
 import Navi from "../.././components/Nav";
 import { Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { setLogin } from "../../store/login";
+import { useDispatch } from "react-redux";
 
 const { Header, Sider } = Layout;
 
@@ -13,6 +15,7 @@ export const X = React.createContext({
 });
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
   const nav = useNavigate();
   const items: MenuProps['items'] = [
     {
@@ -24,6 +27,7 @@ const App: React.FC = () => {
     if(key === "1"){
       axios.post('/api/user/logout').then(res => {
         if(res.data.code === -2){
+          dispatch(setLogin())
           nav("../");
         }
       })

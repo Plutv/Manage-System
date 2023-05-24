@@ -1,33 +1,36 @@
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Form, Input, message } from "antd";
-import React from "react";
+import React, { useEffect } from "react";
 import "./index.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import useAppDispatch from "../../store/useAppDispatch";
+import { setLogin, selectLogin } from "../../store/login";
+import useAppSelector from "../../store/useAppSelector";
 
 const App: React.FC = () => {
-
+  const status: boolean = useAppSelector(selectLogin);
   const nav = useNavigate();
+  const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    if(status) nav('/main');
+  }, [nav, status])
+  
   const onFinish = async (values: any) => {
-    await axios.post('/api/user/login', 
-      values).then((res) => {
-        if(res.data.code === 0){
+      axios.post('/api/user/login', values)
+        .then((res) => {
+        if(res.data.code === 0) {
+          console.log('dispatch')
+          dispatch(setLogin());
           nav("/main");
         }
-        else{
+        else {
           message.info("登录失败，用户名或密码错误")
         }
     })
   };
-  axios.post('/api/user/login').then((res) => {
-        if(res.data.code === 0){
-          nav("/main");
-        }
-        else{
-          message.info("登录失败，用户名或密码错误")
-        }
-    })
+  
   return (
     <div className="sign-in">
       <div className="sign-in-title">

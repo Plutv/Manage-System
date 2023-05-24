@@ -7,10 +7,14 @@ import useAppDispatch from "../../store/useAppDispatch";
 import { fetchList, selectList } from "../../store/list";
 import useAppSelector from "../../store/useAppSelector";
 import { useEffect } from "react";
+import { selectLogin } from "../../store/login";
+import { useNavigate } from "react-router-dom";
 
 const App = (props: { name: string }) => {
   console.log('update Table')
   const data: DataType[] = useAppSelector(selectList);
+  const status: boolean = useAppSelector(selectLogin);
+  const nav = useNavigate()
   const dispatch = useAppDispatch();
   let search: DataType[] = []
   const { name } = props;
@@ -20,9 +24,12 @@ const App = (props: { name: string }) => {
     item.name === name)
   }
   useEffect(() => {
+    if(!status) {
+      nav('../');
+    }
     console.log('init Table')
     dispatch(fetchList())
-  }, [dispatch]) // dispatch 在此处有什么用？
+  }, [dispatch, nav, status]) // dispatch 在此处有什么用？
   
   const columns: ColumnsType<DataType> = [
     {

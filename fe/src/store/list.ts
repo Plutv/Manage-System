@@ -15,7 +15,7 @@ const initList = () => axios.get("/api/stu/list", {
     },
   });
 
-export const fetchList = createAsyncThunk(
+export const fetchList = createAsyncThunk<DataType[], void>(
   'list/initList',
   async () => {
     const res = await initList();
@@ -23,7 +23,7 @@ export const fetchList = createAsyncThunk(
   }
 )
 
-export const addItem = createAsyncThunk<any, DataType>(
+export const addItem = createAsyncThunk<DataType, DataType>(
   'list/addItem', 
   async (data) => {
     const res = await axios.post("/api/stu/create", data);
@@ -35,7 +35,7 @@ export const addItem = createAsyncThunk<any, DataType>(
   }
 )
 
-export const updateItem = createAsyncThunk<any, DataType>(
+export const updateItem = createAsyncThunk<DataType, DataType>(
   'list/updateItem', 
   async (data) => {
     await axios.post("/api/stu/update", data);
@@ -43,7 +43,7 @@ export const updateItem = createAsyncThunk<any, DataType>(
   }
 )
 
-export const deleteItem = createAsyncThunk<any, any>(
+export const deleteItem = createAsyncThunk<string, string>(
   'list/deleteItem',
   async (id) => {
     axios.post("/api/stu/delete", { id });
@@ -53,20 +53,7 @@ export const deleteItem = createAsyncThunk<any, any>(
 export const listSlice = createSlice({
   name: "list",
   initialState: initialList,
-  reducers: {
-    // createItem: (state, action: PayloadAction<DataType>) => {
-    //   const item: DataType = action.payload;
-    //   state.unshift(item);
-    // },
-    // updateItem: (state, action: PayloadAction<DataType>) => {
-    //   const index = state.findIndex((item) => item.id === action.payload.id);
-    //   state[index] = action.payload;
-    // },
-    // deleteItem: (state, action: PayloadAction<String>) => {
-    //   const index = state.findIndex((item) => item.id === action.payload);
-    //   state.splice(index, 1);
-    // }
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
     .addCase(fetchList.fulfilled, (state, action) => {
@@ -87,5 +74,6 @@ export const listSlice = createSlice({
     })
   },
 });
+
 
 export const selectList = (state: RootState) => state.list;

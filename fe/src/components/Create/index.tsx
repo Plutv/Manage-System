@@ -72,11 +72,6 @@ const App = (props: { onchange: () => void }) => {
     }
     
     dispatch(addItem(data))
-    // axios.post("/api/stu/create", data).then((res) => {
-    //   if(res.data.code === 1){
-    //     return;
-    //   }
-    // });
     setConfirmLoading(true);
     setTimeout(() => {
       setOpen(false);

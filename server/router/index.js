@@ -37,6 +37,19 @@ async function checkUser(ctx, next) {
   }
 }
 
+async function getLogin(ctx, next) {
+  console.log("getLogin")
+  if(ctx.session.user) {
+    ctx.body = { code: 0, message: "登录成功" };
+    console.log(ctx.session.user);
+    return;
+  }
+  else {
+    ctx.body = { code: -2, message: "没有登录" };
+    return;
+  }
+}
+
 async function getUserInfo(ctx, next) {
   if (!ctx.session.user) {
     ctx.body = { code: -2, message: "没有登录" };
@@ -114,6 +127,8 @@ async function deleteUser(ctx, next) {
 }
 
 router.post("/api/user/login", checkUser);
+
+router.get("/api/user/getlogin", getLogin);
 
 router.post("/api/user/logout", logoutUser);
 

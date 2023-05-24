@@ -1,6 +1,8 @@
 import { Divider, List, Typography } from "antd";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { selectLogin } from "../../store/login";
+import useAppSelector from "../../store/useAppSelector";
+import { useEffect } from "react";
 
 const data = [
   "添加以及修改用户时会进行类型检查，名字、专业为中文，电话、邮箱、头像URL要有效",
@@ -17,12 +19,12 @@ const data = [
 ];
 
 const App = () => {
+  const status = useAppSelector(selectLogin);
   const nav = useNavigate();
-  axios.get('/api/user/info').then(res => {
-    if(res.data.code === -2){
-      nav("../");
-    }
-  })
+
+  useEffect(() => {
+    if(!status) nav('../');
+  }, [nav, status])
   return (
     <>
       <Divider orientation="left">关于</Divider>

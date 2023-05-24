@@ -76,11 +76,6 @@ const App = (props: { id: string }) => {
       return;
     }
 
-    // axios.post("/api/stu/update", data).then((res) => {
-    //   if(res.data.code === -2){
-    //     nav("../");
-    //   }
-    // });
     
     setConfirmLoading(true);
     setTimeout(() => {
